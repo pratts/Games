@@ -27,7 +27,7 @@ var canvasUtil = {
     
     startSnake : function () {
         "use strict";
-        setInterval(canvasUtil.drawRect, 1000);
+        setInterval(canvasUtil.drawRect, 100);
     },
     
     stopSnake : function () {
