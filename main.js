@@ -44,10 +44,9 @@ var canvasUtil = {
         canvasUtil.snakeTimer = setInterval(canvasUtil.drawRect, 100);
     },
     
-    stopSnake : function () {
+    pauseSnake : function () {
         "use strict";
         clearInterval(canvasUtil.snakeTimer);
-        //clearTimeout(canvasUtil.snakeTimer);
     }
 };
 
@@ -57,6 +56,11 @@ function startSnake() {
     canvasUtil.startSnake();
 }
 
-function stopSnake() {
-    canvasUtil.stopSnake();
+function pauseSnake() {
+    canvasUtil.pauseSnake();
+}
+function resetSnake() {
+    snake.headPosition = 0;
+    pauseSnake();
+    startSnake();
 }
