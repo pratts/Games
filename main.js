@@ -10,11 +10,11 @@ var snake = {
 var canvasUtil = {
     canvasObj : document.getElementById("canvasElem"),
     canvasContext : null,
+    snakeTimer : null,
     initializeData : function () {
         "use strict";
         if (canvasUtil.canvasObj.getContext) {
             canvasUtil.canvasContext = canvasUtil.canvasObj.getContext('2d');
-            canvasUtil.startSnake();
         }
     },
     drawRect : function () {
@@ -27,13 +27,36 @@ var canvasUtil = {
     
     startSnake : function () {
         "use strict";
-        setInterval(canvasUtil.drawRect, 100);
+        $(document).keypress(function (event) {
+            var code = event.keyCode || event.which;
+            if(event.keyCode === 37) {
+                
+            } else  if(event.keyCode === 38) {
+                
+            } else if(event.keyCode === 39) {
+                
+            } else if(40) {
+                
+            } else {
+                
+            }
+        });
+        canvasUtil.snakeTimer = setInterval(canvasUtil.drawRect, 100);
     },
     
     stopSnake : function () {
         "use strict";
-        clearInterval();
+        clearInterval(canvasUtil.snakeTimer);
+        //clearTimeout(canvasUtil.snakeTimer);
     }
 };
 
 canvasUtil.initializeData();
+
+function startSnake() {
+    canvasUtil.startSnake();
+}
+
+function stopSnake() {
+    canvasUtil.stopSnake();
+}

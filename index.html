@@ -5,12 +5,15 @@
         <title>Snake Game</title>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-    <body id="snakeBody">
-        <div>
-            <button onclick="">Start</button>
-            <button onclick="">Stop</button>
+    <body>
+        <div style="position: relative;">
+            <div style="width: 10%;position: relative;margin: 0px auto;">
+                <button onclick="startSnake()">Start</button>
+                <button onclick="stopSnake()">Stop</button>
+            </div>
+            <canvas id="canvasElem" class="canvasElem"></canvas>
         </div>
-        <canvas id="canvasElem" class="canvasElem"></canvas>
     </body>
+    <script src="jquery.min.js"></script>
     <script src="main.js"></script>
 </html>
