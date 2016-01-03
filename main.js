@@ -7,11 +7,12 @@ function randomIntFromInterval(min, max) {
 var snake = {
     xPosition : 0,
     yPosition : 0,
-    headPosition : 0,
-    tailPosition : 0,
+    headXposition : 0,
+    headYposition : 0,
     lengthBody : 4,
     direction : "moveRight",
-    snakeState : 0 //0 for stopped and 1 for moving
+    snakeState : 0, //0 for stopped and 1 for moving
+	snakeScore : 0
 };
 
 var food = {
@@ -72,50 +73,50 @@ var canvasUtil = {
     },
     moveUp : function () {
         "use strict";
-        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+        if (validateSnakePosition()) {
             console.log("inside");
             canvasUtil.clearAndDraw();
             snake.yPosition -= 1;
+			checkIfFoodTaken();
         } else {
             console.log("outside");
             resetAll();
-            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
         }
     },
     moveRight : function () {
         "use strict";
-        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+        if (validateSnakePosition()) {
             console.log("inside");
             canvasUtil.clearAndDraw();
             snake.xPosition += 1;
+			checkIfFoodTaken();
         } else {
             console.log("outside");
             resetAll();
-            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
         }
     },
     moveDown : function () {
         "use strict";
-        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+        if (validateSnakePosition()) {
             console.log("inside");
             canvasUtil.clearAndDraw();
             snake.yPosition += 1;
+			checkIfFoodTaken();
         } else {
             console.log("outside");
             resetAll();
-            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
         }
     },
     moveLeft : function () {
         "use strict";
-        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+        if (validateSnakePosition()) {
             console.log("inside");
             canvasUtil.clearAndDraw();
             snake.xPosition -= 1;
+			checkIfFoodTaken();
         } else {
             console.log("outside");
             resetAll();
-            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
         }
     },
     clearAndDraw : function () {
@@ -149,8 +150,15 @@ function resetSnake() {
     canvasUtil.canvasContext.clearRect(0, 0, canvasUtil.canvasObj.width, canvasUtil.canvasObj.height);
     food.x = randomIntFromInterval(1, canvasUtil.canvasObj.width);
     food.y = randomIntFromInterval(1, canvasUtil.canvasObj.height);
+	$('.snakeScore').text(0);
+	snake.snakeScore = 0;
     pauseSnake();
     startSnake();
+}
+
+function validateSnakePosition() {
+	"use strict";
+	return (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0);
 }
 
 function resetAll() {
@@ -161,4 +169,17 @@ function resetAll() {
     snake.yPosition = 0;
     clearInterval(canvasUtil.snakeTimer);
     canvasUtil.canvasContext.clearRect(0, 0, canvasUtil.canvasObj.width,            canvasUtil.canvasObj.height);
+	canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
+}
+
+function checkIfFoodTaken() {
+	"use strict";
+	if (snake.xPosition === food.x && snake.yPosition === food.y) {
+		canvasUtil.canvasContext.clearRect(food.x, food.y, 4, 4);
+		food.x = randomIntFromInterval(1, canvasUtil.canvasObj.width);
+		food.y = randomIntFromInterval(1, canvasUtil.canvasObj.height);
+		canvasUtil.canvasContext.fillRect(food.x, food.y, 4, 4);
+		snake.snakeScore += 1;
+		$('.snakeScore').text(snake.snakeScore);
+	}
 }
