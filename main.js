@@ -72,23 +72,51 @@ var canvasUtil = {
     },
     moveUp : function () {
         "use strict";
-        canvasUtil.clearAndDraw();
-        snake.yPosition -= 1;
+        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+            console.log("inside");
+            canvasUtil.clearAndDraw();
+            snake.yPosition -= 1;
+        } else {
+            console.log("outside");
+            resetAll();
+            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
+        }
     },
     moveRight : function () {
         "use strict";
-        canvasUtil.clearAndDraw();
-        snake.xPosition += 1;
+        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+            console.log("inside");
+            canvasUtil.clearAndDraw();
+            snake.xPosition += 1;
+        } else {
+            console.log("outside");
+            resetAll();
+            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
+        }
     },
     moveDown : function () {
         "use strict";
-        canvasUtil.clearAndDraw();
-        snake.yPosition += 1;
+        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+            console.log("inside");
+            canvasUtil.clearAndDraw();
+            snake.yPosition += 1;
+        } else {
+            console.log("outside");
+            resetAll();
+            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
+        }
     },
     moveLeft : function () {
         "use strict";
-        canvasUtil.clearAndDraw();
-        snake.xPosition -= 1;
+        if (snake.xPosition <= canvasUtil.canvasObj.width && snake.yPosition <= canvasUtil.canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0) {
+            console.log("inside");
+            canvasUtil.clearAndDraw();
+            snake.xPosition -= 1;
+        } else {
+            console.log("outside");
+            resetAll();
+            canvasUtil.canvasContext.fillText("GAME OVER !", (canvasUtil.canvasObj.width - 65) / 2, (canvasUtil.canvasObj.height) / 2);
+        }
     },
     clearAndDraw : function () {
         "use strict";
@@ -123,4 +151,14 @@ function resetSnake() {
     food.y = randomIntFromInterval(1, canvasUtil.canvasObj.height);
     pauseSnake();
     startSnake();
+}
+
+function resetAll() {
+    "use strict";
+    snake.snakeState = 0;
+    snake.direction = "moveRight";
+    snake.xPosition = 0;
+    snake.yPosition = 0;
+    clearInterval(canvasUtil.snakeTimer);
+    canvasUtil.canvasContext.clearRect(0, 0, canvasUtil.canvasObj.width,            canvasUtil.canvasObj.height);
 }
