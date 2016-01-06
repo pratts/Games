@@ -3,7 +3,7 @@ var canvasUtil = {
     snakeTimer : null,
     drawRect : function () {
         "use strict";
-        canvasUtil.snakeTimer = setInterval(canvasUtil[snakeProp.snakeBody[0].direction], 50);
+        canvasUtil.snakeTimer = setInterval(canvasUtil[snakeProp.snakeBody[0].direction], 10);
     },
     
     startSnake : function () {
@@ -21,7 +21,7 @@ var canvasUtil = {
             }
 			clearInterval(canvasUtil.snakeTimer);
 			snakeProp.snakeState = 1;
-			canvasUtil.snakeTimer = setInterval(canvasUtil[snakeProp.snakeBody[0].direction], 50);
+			canvasUtil.snakeTimer = setInterval(canvasUtil[snakeProp.snakeBody[0].direction], 10);
         });
     },
     
@@ -100,6 +100,7 @@ function startSnake() {
 	if (snakeProp.snakeState === -1) {
 		createSnakeAndFood();
 		snakeProp.snakeState = 0;
+		$('.snakeScore').text(snakeProp.snakeScore);
 	}
 	
     canvasUtil.startSnake();
@@ -143,10 +144,20 @@ function validateSnakePosition() {
 
 function resetAll() {
     "use strict";
-    snakeProp.snakeState = 0;
+    snakeProp.snakeState = -1;
+	snakeProp.snakeScore = 0;
     snakeProp.snakeBody = [];
-	var sk = new SnakeObj(0, 0, -1, -1, "moveRight");
-	snakeProp.snakeBody.push(sk);
+	var i = 30, sk = null;
+	while (i > 0) {
+		if (i === 30) {
+			sk = new SnakeObj(i, 0, -1, 0, "moveRight");
+			snakeProp.snakeBody.push(sk);
+		} else {
+			sk = new SnakeObj(i, 0, i + 1, 0, "moveRight");
+			snakeProp.snakeBody.push(sk);
+		}
+		i = i - 1;
+	}
     clearInterval(canvasUtil.snakeTimer);
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
 	canvasContext.fillText("GAME OVER !", (canvasObj.width - 65) / 2, (canvasObj.height) / 2);
