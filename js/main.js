@@ -8,7 +8,8 @@ var snakeProp = {
 	snakeScore : 0,
 	snakeState : -1, //0 for stopped and 1 for moving
 	lengthBody : 1,
-	snakeBody : []
+	snakeBody : [],
+	snakeHead : null
 };
 
 var SnakeObj = function (xPosition, yPosition, parentX, parentY, direction) {
@@ -40,6 +41,7 @@ function createSnakeAndFood() {
 	while (i > 0) {
 		if (i === 30) {
 			sk = new SnakeObj(i, 0, -1, 0, "moveRight");
+			snakeProp.snakeHead = sk;
 			snakeProp.snakeBody.push(sk);
 		} else {
 			sk = new SnakeObj(i, 0, i + 1, 0, "moveRight");
