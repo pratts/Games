@@ -186,13 +186,13 @@ function checkIfFoodTaken() {
 
 function updateSnakeBody() {
 	"use strict";
-	var i = snakeProp.snakeBody.length - 1, snakePrev = null, snakeCur = null;
-	while (i > 0) {
-		snakePrev = snakeProp.snakeBody[i - 1];
-		snakeCur = snakeProp.snakeBody[i];
+	var i = 1, snakePrev = null, snakeCur = null;
+	while (i < snakeProp.snakeBody.length -1) {
+		snakePrev = snakeProp.snakeBody[i];
+		snakeCur = snakeProp.snakeBody[i - 1];
 		snakeCur.xPosition = snakePrev.xPosition;
 		snakeCur.yPosition = snakePrev.yPosition;
-		i = i - 1;
+		i = i + 1;
 	}
 }
 
