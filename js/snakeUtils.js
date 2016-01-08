@@ -1,4 +1,4 @@
-/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, updateParentBody, resetAll, checkIfFoodTaken, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood*/
+/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTaken, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood*/
 var canvasUtil = {
     snakeTimer : null,
     drawRect : function () {
@@ -35,12 +35,12 @@ var canvasUtil = {
     moveUp : function () {
         "use strict";
         if (validateSnakePosition()) {
-            canvasUtil.clearAndDraw();
 			checkIfFoodTaken();
-			updateParentBody();
 			updateSnakeBody();
-			snakeProp.snakeHead.yPosition -= 1;
+			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition - 1;
 			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
+			canvasUtil.clearAndDraw();
+
         } else {
             resetAll();
         }
@@ -48,12 +48,11 @@ var canvasUtil = {
     moveRight : function () {
         "use strict";
         if (validateSnakePosition()) {
-            canvasUtil.clearAndDraw();
 			checkIfFoodTaken();
-			updateParentBody();
 			updateSnakeBody();
-			snakeProp.snakeHead.xPosition += 1;
+			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition + 1;
 			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
+			canvasUtil.clearAndDraw();
         } else {
             resetAll();
         }
@@ -61,12 +60,11 @@ var canvasUtil = {
     moveDown : function () {
         "use strict";
         if (validateSnakePosition()) {
-            canvasUtil.clearAndDraw();
 			checkIfFoodTaken();
-			updateParentBody();
 			updateSnakeBody();
-			snakeProp.snakeHead.yPosition += 1;
+			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition + 1;
 			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
+			canvasUtil.clearAndDraw();
         } else {
             resetAll();
         }
@@ -74,12 +72,11 @@ var canvasUtil = {
     moveLeft : function () {
         "use strict";
         if (validateSnakePosition()) {
-            canvasUtil.clearAndDraw();
 			checkIfFoodTaken();
-			updateParentBody();
 			updateSnakeBody();
-			snakeProp.snakeHead.xPosition -= 1;
+			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition - 1;
 			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
+			canvasUtil.clearAndDraw();
         } else {
             resetAll();
         }
@@ -128,13 +125,11 @@ function resetSnake() {
 function validateSnakePosition() {
 	"use strict";
 	if ((snakeProp.snakeHead.xPosition <= canvasObj.width) && (snakeProp.snakeHead.yPosition <= canvasObj.height) && (snakeProp.snakeHead.xPosition >= 0) && (snakeProp.snakeHead.yPosition >= 0)) {
-		var i = snakeProp.snakeBody.length - 1, snake = null;
+		var i = snakeProp.snakeBody.length - 2, snake = null;
 		while (i > 0) {
 			snake = snakeProp.snakeBody[i];
 			if ((snake.xPosition <= canvasObj.width && snake.yPosition <= canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0)) {
 				if (snake.xPosition === snakeProp.snakeHead.xPosition && snake.yPosition === snakeProp.snakeHead.yPosition) {
-					console.log(snakeProp.snakeBody);
-					console.log("innermost");
 					return false;
 				}
 				i = i - 1;
@@ -142,7 +137,6 @@ function validateSnakePosition() {
 		}
 		return true;
 	} else {
-		console.log("outermost");
 		return false;
 	}
 }
@@ -174,7 +168,6 @@ function checkIfFoodTaken() {
 	if (snakeProp.snakeHead.xPosition === food.x && snakeProp.snakeHead.yPosition === food.y) {
 		var s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].xPosition, snakeProp.snakeBody[0].yPosition, snakeProp.snakeBody[0].direction);
 		snakeProp.snakeBody.unshift(s);
-		console.log(snakeProp.snakeBody);
 		canvasContext.clearRect(food.x, food.y, 1, 1);
 		food.x = randomIntFromInterval(1, canvasObj.width);
 		food.y = randomIntFromInterval(1, canvasObj.height);
@@ -187,23 +180,10 @@ function checkIfFoodTaken() {
 function updateSnakeBody() {
 	"use strict";
 	var i = 1, snakePrev = null, snakeCur = null;
-	while (i < snakeProp.snakeBody.length -1) {
-		snakePrev = snakeProp.snakeBody[i];
-		snakeCur = snakeProp.snakeBody[i - 1];
-		snakeCur.xPosition = snakePrev.xPosition;
-		snakeCur.yPosition = snakePrev.yPosition;
+	while (i < snakeProp.snakeBody.length) {
+		snakeProp.snakeBody[i - 1].xPosition = snakeProp.snakeBody[i].xPosition;
+		snakeProp.snakeBody[i - 1].yPosition = snakeProp.snakeBody[i].yPosition;
+		snakeProp.snakeBody[i - 1].direction = snakeProp.snakeBody[i].direction;
 		i = i + 1;
 	}
-}
-
-function updateParentBody() {
-	"use strict";
-	/*var i = 1, snakePrev = null, snakeCur = null;
-	while (i < snakeProp.snakeBody.length) {
-		snakePrev = snakeProp.snakeBody[i - 1];
-		snakeCur = snakeProp.snakeBody[i];
-		snakeCur.parentX = snakePrev.xPosition;
-		snakeCur.parentY = snakePrev.yPosition;
-		i = i + 1;
-	}*/
 }
