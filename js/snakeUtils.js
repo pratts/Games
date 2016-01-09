@@ -1,9 +1,43 @@
 /*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTaken, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood*/
+function clearAndDraw() {
+	"use strict";
+	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
+	canvasContext.fillRect(food.x, food.y, 1, 1);
+	var i = 0, snake = null;
+	while (i < snakeProp.snakeBody.length) {
+		snake = snakeProp.snakeBody[i];
+		canvasContext.fillRect(snake.xPosition, snake.yPosition, 1, 1);
+		i = i + 1;
+	}
+}
+
+function snakeMovement() {
+	"use strict";
+	var direction = snakeProp.snakeHead.direction;
+	if (validateSnakePosition()) {
+		checkIfFoodTaken();
+		updateSnakeBody();
+		if (direction === "moveUp") {
+			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition - 1;
+		} else if (direction === "moveRight") {
+			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition + 1;
+		} else if (direction === "moveDown") {
+			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition + 1;
+		} else if (direction === "moveLeft") {
+			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition - 1;
+		}
+		snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
+		clearAndDraw();
+	} else {
+		resetAll();
+	}
+}
+
 var canvasUtil = {
     snakeTimer : null,
     drawRect : function () {
         "use strict";
-        canvasUtil.snakeTimer = setInterval(canvasUtil[snakeProp.snakeHead.direction], 10);
+        canvasUtil.snakeTimer = setInterval(snakeMovement, 10);
     },
     
     startSnake : function () {
@@ -21,7 +55,7 @@ var canvasUtil = {
             }
 			clearInterval(canvasUtil.snakeTimer);
 			snakeProp.snakeState = 1;
-			canvasUtil.snakeTimer = setInterval(canvasUtil[snakeProp.snakeHead.direction], 10);
+			canvasUtil.snakeTimer = setInterval(snakeMovement, 10);
         });
     },
     
@@ -31,66 +65,6 @@ var canvasUtil = {
             snakeProp.snakeState = 0;
             clearInterval(canvasUtil.snakeTimer);
         }
-    },
-    moveUp : function () {
-        "use strict";
-        if (validateSnakePosition()) {
-			checkIfFoodTaken();
-			updateSnakeBody();
-			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition - 1;
-			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
-			canvasUtil.clearAndDraw();
-
-        } else {
-            resetAll();
-        }
-    },
-    moveRight : function () {
-        "use strict";
-        if (validateSnakePosition()) {
-			checkIfFoodTaken();
-			updateSnakeBody();
-			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition + 1;
-			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
-			canvasUtil.clearAndDraw();
-        } else {
-            resetAll();
-        }
-    },
-    moveDown : function () {
-        "use strict";
-        if (validateSnakePosition()) {
-			checkIfFoodTaken();
-			updateSnakeBody();
-			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition + 1;
-			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
-			canvasUtil.clearAndDraw();
-        } else {
-            resetAll();
-        }
-    },
-    moveLeft : function () {
-        "use strict";
-        if (validateSnakePosition()) {
-			checkIfFoodTaken();
-			updateSnakeBody();
-			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition - 1;
-			snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
-			canvasUtil.clearAndDraw();
-        } else {
-            resetAll();
-        }
-    },
-    clearAndDraw : function () {
-        "use strict";
-        canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
-        canvasContext.fillRect(food.x, food.y, 1, 1);
-		var i = 0, snake = null;
-		while (i < snakeProp.snakeBody.length) {
-			snake = snakeProp.snakeBody[i];
-			canvasContext.fillRect(snake.xPosition, snake.yPosition, 1, 1);
-			i = i + 1;
-		}
     }
 };
 
@@ -146,18 +120,7 @@ function resetAll() {
     snakeProp.snakeState = -1;
 	snakeProp.snakeScore = 0;
     snakeProp.snakeBody = [];
-	var i = 30, sk = null;
-	while (i > 0) {
-		if (i === 30) {
-			sk = new SnakeObj(i, 0, -1, 0, "moveRight");
-			snakeProp.snakeHead = sk;
-			snakeProp.snakeBody.push(sk);
-		} else {
-			sk = new SnakeObj(i, 0, i + 1, 0, "moveRight");
-			snakeProp.snakeBody.push(sk);
-		}
-		i = i - 1;
-	}
+	snakeProp.snakeHead = null;
     clearInterval(canvasUtil.snakeTimer);
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
 	canvasContext.fillText("GAME OVER !", (canvasObj.width - 65) / 2, (canvasObj.height) / 2);
@@ -166,7 +129,7 @@ function resetAll() {
 function checkIfFoodTaken() {
 	"use strict";
 	if (snakeProp.snakeHead.xPosition === food.x && snakeProp.snakeHead.yPosition === food.y) {
-		var s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].xPosition, snakeProp.snakeBody[0].yPosition, snakeProp.snakeBody[0].direction);
+		var s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].direction);
 		snakeProp.snakeBody.unshift(s);
 		canvasContext.clearRect(food.x, food.y, 1, 1);
 		food.x = randomIntFromInterval(1, canvasObj.width);

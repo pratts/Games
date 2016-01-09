@@ -12,12 +12,10 @@ var snakeProp = {
 	snakeHead : null
 };
 
-var SnakeObj = function (xPosition, yPosition, parentX, parentY, direction) {
+var SnakeObj = function (xPosition, yPosition, direction) {
 	"use strict";
 	this.xPosition = xPosition;
     this.yPosition = yPosition;
-	this.parentX = parentX;
-	this.parentY = parentY;
     this.direction = direction;
 };
 
@@ -40,11 +38,11 @@ function createSnakeAndFood() {
 	var i = 30, sk = null;
 	while (i > 0) {
 		if (i === 30) {
-			sk = new SnakeObj(i, 0, -1, 0, "moveRight");
+			sk = new SnakeObj(i, 0, "moveRight");
 			snakeProp.snakeHead = sk;
 			snakeProp.snakeBody.unshift(sk);
 		} else {
-			sk = new SnakeObj(i, 0, i + 1, 0, "moveRight");
+			sk = new SnakeObj(i, 0, "moveRight");
 			snakeProp.snakeBody.unshift(sk);
 		}
 		i = i - 1;
