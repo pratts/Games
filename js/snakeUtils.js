@@ -1,4 +1,4 @@
-/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTaken, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood*/
+/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTakenandUpdateBody, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood*/
 function clearAndDraw() {
 	"use strict";
 	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
@@ -15,8 +15,8 @@ function snakeMovement() {
 	"use strict";
 	var direction = snakeProp.snakeHead.direction;
 	if (validateSnakePosition()) {
-		checkIfFoodTaken();
-		updateSnakeBody();
+		checkIfFoodTakenandUpdateBody();
+		//updateSnakeBody();
 		if (direction === "moveUp") {
 			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition - 1;
 		} else if (direction === "moveRight") {
@@ -126,10 +126,11 @@ function resetAll() {
 	canvasContext.fillText("GAME OVER !", (canvasObj.width - 65) / 2, (canvasObj.height) / 2);
 }
 
-function checkIfFoodTaken() {
+function checkIfFoodTakenandUpdateBody() {
 	"use strict";
+	var i = 1, snakePrev = null, snakeCur = null, s = null;
 	if (snakeProp.snakeHead.xPosition === food.x && snakeProp.snakeHead.yPosition === food.y) {
-		var s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].direction);
+		s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].direction);
 		snakeProp.snakeBody.unshift(s);
 		canvasContext.clearRect(food.x, food.y, 1, 1);
 		food.x = randomIntFromInterval(1, canvasObj.width);
@@ -138,11 +139,7 @@ function checkIfFoodTaken() {
 		snakeProp.snakeScore += 1;
 		$('.snakeScore').text(snakeProp.snakeScore);
 	}
-}
-
-function updateSnakeBody() {
-	"use strict";
-	var i = 1, snakePrev = null, snakeCur = null;
+	
 	while (i < snakeProp.snakeBody.length) {
 		snakeProp.snakeBody[i - 1].xPosition = snakeProp.snakeBody[i].xPosition;
 		snakeProp.snakeBody[i - 1].yPosition = snakeProp.snakeBody[i].yPosition;
