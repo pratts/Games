@@ -2,11 +2,11 @@
 function clearAndDraw() {
 	"use strict";
 	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
-	canvasContext.fillRect(food.x, food.y, 1, 1);
+	canvasContext.fillRect(food.x, food.y, 8, 8);
 	var i = 0, snake = null;
 	while (i < snakeProp.snakeBody.length) {
 		snake = snakeProp.snakeBody[i];
-		canvasContext.fillRect(snake.xPosition, snake.yPosition, 1, 1);
+		canvasContext.fillRect(snake.xPosition, snake.yPosition, 8, 8);
 		i = i + 1;
 	}
 }
@@ -132,10 +132,10 @@ function checkIfFoodTakenandUpdateBody() {
 	if (snakeProp.snakeHead.xPosition === food.x && snakeProp.snakeHead.yPosition === food.y) {
 		s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].direction);
 		snakeProp.snakeBody.unshift(s);
-		canvasContext.clearRect(food.x, food.y, 1, 1);
+		canvasContext.clearRect(food.x, food.y, 4, 4);
 		food.x = randomIntFromInterval(1, canvasObj.width);
 		food.y = randomIntFromInterval(1, canvasObj.height);
-		canvasContext.fillRect(food.x, food.y, 1, 1);
+		canvasContext.fillRect(food.x, food.y, 8, 8);
 		snakeProp.snakeScore += 1;
 		$('.snakeScore').text(snakeProp.snakeScore);
 	}
