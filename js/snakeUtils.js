@@ -15,8 +15,6 @@ function snakeMovement() {
 	"use strict";
 	var direction = snakeProp.snakeHead.direction;
 	if (validateSnakePosition()) {
-		checkIfFoodTakenandUpdateBody();
-		//updateSnakeBody();
 		if (direction === "moveUp") {
 			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition - 1;
 		} else if (direction === "moveRight") {
@@ -26,7 +24,7 @@ function snakeMovement() {
 		} else if (direction === "moveLeft") {
 			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition - 1;
 		}
-		snakeProp.snakeBody[snakeProp.snakeBody.length - 1] = snakeProp.snakeHead;
+		checkIfFoodTakenandUpdateBody();
 		clearAndDraw();
 	} else {
 		resetAll();
@@ -53,6 +51,9 @@ var canvasUtil = {
             } else if (code === 40 && snakeProp.snakeHead.direction !== "moveUp") {
                 snakeProp.snakeHead.direction = "moveDown";
             }
+			if (code) {
+				event.preventDefault();
+			}
 			clearInterval(canvasUtil.snakeTimer);
 			snakeProp.snakeState = 1;
 			canvasUtil.snakeTimer = setInterval(snakeMovement, 10);
@@ -98,12 +99,14 @@ function resetSnake() {
 
 function validateSnakePosition() {
 	"use strict";
-	if ((snakeProp.snakeHead.xPosition <= canvasObj.width) && (snakeProp.snakeHead.yPosition <= canvasObj.height) && (snakeProp.snakeHead.xPosition >= 0) && (snakeProp.snakeHead.yPosition >= 0)) {
-		var i = snakeProp.snakeBody.length - 2, snake = null;
+	var snakeHead = snakeProp.snakeBody[snakeProp.snakeBody.length - 1], i = null, snake = null;
+	if ((snakeHead.xPosition <= canvasObj.width) && (snakeHead.yPosition <= canvasObj.height) && (snakeHead.xPosition >= 0) && (snakeHead.yPosition >= 0)) {
+		i = snakeProp.snakeBody.length - 2;
+		snake = null;
 		while (i > 0) {
 			snake = snakeProp.snakeBody[i];
 			if ((snake.xPosition <= canvasObj.width && snake.yPosition <= canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0)) {
-				if (snake.xPosition === snakeProp.snakeHead.xPosition && snake.yPosition === snakeProp.snakeHead.yPosition) {
+				if (snake.xPosition === snakeHead.xPosition && snake.yPosition === snakeHead.yPosition) {
 					return false;
 				}
 				i = i - 1;
@@ -128,22 +131,27 @@ function resetAll() {
 
 function checkIfFoodTakenandUpdateBody() {
 	"use strict";
-	var i = 1, snakePrev = null, snakeCur = null, s = null;
+	var i = 1, snakePrev = null, snakeCur = null, s = null, snakeTail = null;
 	if (snakeProp.snakeHead.xPosition === food.x && snakeProp.snakeHead.yPosition === food.y) {
-		s = new SnakeObj(food.x, food.y, snakeProp.snakeBody[0].direction);
+		s = new SnakeObj(food.x, food.y, snakeProp.snakeHead.direction);
 		snakeProp.snakeBody.unshift(s);
-		canvasContext.clearRect(food.x, food.y, 4, 4);
-		food.x = randomIntFromInterval(1, canvasObj.width);
-		food.y = randomIntFromInterval(1, canvasObj.height);
+		canvasContext.clearRect(food.x, food.y, 8, 8);
+		food.x = randomIntFromInterval(1, canvasObj.width - 1);
+		food.y = randomIntFromInterval(1, canvasObj.height - 1);
 		canvasContext.fillRect(food.x, food.y, 8, 8);
 		snakeProp.snakeScore += 1;
 		$('.snakeScore').text(snakeProp.snakeScore);
 	}
 	
-	while (i < snakeProp.snakeBody.length) {
+	/*while (i < snakeProp.snakeBody.length) {
 		snakeProp.snakeBody[i - 1].xPosition = snakeProp.snakeBody[i].xPosition;
 		snakeProp.snakeBody[i - 1].yPosition = snakeProp.snakeBody[i].yPosition;
 		snakeProp.snakeBody[i - 1].direction = snakeProp.snakeBody[i].direction;
 		i = i + 1;
-	}
+	}*/
+	snakeTail = snakeProp.snakeBody.shift();
+	snakeTail.xPosition = snakeProp.snakeHead.xPosition;
+	snakeTail.yPosition = snakeProp.snakeHead.yPosition;
+	snakeTail.direction = snakeProp.snakeHead.direction;
+	snakeProp.snakeBody.push(snakeTail);
 }

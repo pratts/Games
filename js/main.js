@@ -35,19 +35,14 @@ if (canvasObj.getContext) {
 function createSnakeAndFood() {
 	"use strict";
 	snakeProp.snakeBody = [];
-	var i = 30, sk = null;
-	while (i > 0) {
-		if (i === 30) {
-			sk = new SnakeObj(i, 0, "moveRight");
-			snakeProp.snakeHead = sk;
-			snakeProp.snakeBody.unshift(sk);
-		} else {
-			sk = new SnakeObj(i, 0, "moveRight");
-			snakeProp.snakeBody.unshift(sk);
-		}
-		i = i - 1;
+	var i = 0, sk = null;
+	while (i < 30) {
+		sk = new SnakeObj(i, 0, "moveRight");
+		snakeProp.snakeBody.push(sk);
+		i = i + 1;
 	}
+	snakeProp.snakeHead = new SnakeObj(i - 1, 0, "moveRight");
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
-    food.x = randomIntFromInterval(1, canvasObj.width);
-    food.y = randomIntFromInterval(1, canvasObj.height);
+    food.x = randomIntFromInterval(1, canvasObj.width - 1);
+    food.y = randomIntFromInterval(1, canvasObj.height - 1);
 }
