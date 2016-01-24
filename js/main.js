@@ -9,7 +9,8 @@ var snakeProp = {
 	snakeState : -1, //0 for stopped and 1 for moving
 	lengthBody : 1,
 	snakeBody : [],
-	snakeHead : null
+	snakeHead : null,
+	snakeSpeed : 10
 };
 
 var SnakeObj = function (xPosition, yPosition, direction) {

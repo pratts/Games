@@ -35,7 +35,7 @@ var canvasUtil = {
     snakeTimer : null,
     drawRect : function () {
         "use strict";
-        canvasUtil.snakeTimer = setInterval(snakeMovement, 10);
+        canvasUtil.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
     },
     
     startSnake : function () {
@@ -56,7 +56,7 @@ var canvasUtil = {
 			}
 			clearInterval(canvasUtil.snakeTimer);
 			snakeProp.snakeState = 1;
-			canvasUtil.snakeTimer = setInterval(snakeMovement, 10);
+			canvasUtil.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
         });
     },
     
@@ -93,6 +93,7 @@ function resetSnake() {
 	createSnakeAndFood();
 	$('.snakeScore').text(0);
 	snakeProp.snakeScore = 0;
+	snakeProp.snakeSpeed = 10;
     pauseSnake();
     startSnake();
 }
@@ -140,6 +141,11 @@ function checkIfFoodTakenandUpdateBody() {
 		food.y = randomIntFromInterval(1, canvasObj.height - 1);
 		canvasContext.fillRect(food.x, food.y, 8, 8);
 		snakeProp.snakeScore += 1;
+		if (snakeProp.snakeScore > 5) {
+			snakeProp.snakeSpeed = 5;
+		} else if (snakeProp.snakeScore > 10) {
+			snakeProp.snakeSpeed = 1;
+		}
 		$('.snakeScore').text(snakeProp.snakeScore);
 	}
 	
