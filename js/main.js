@@ -7,10 +7,10 @@ function randomIntFromInterval(min, max) {
 var snakeProp = {
 	snakeScore : 0,
 	snakeState : -1, //0 for stopped and 1 for moving
-	lengthBody : 1,
 	snakeBody : [],
 	snakeHead : null,
-	snakeSpeed : 10
+	snakeSpeed : 10,
+	snakeTimer : null
 };
 
 var SnakeObj = function (xPosition, yPosition, direction) {

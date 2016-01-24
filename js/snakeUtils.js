@@ -32,12 +32,6 @@ function snakeMovement() {
 }
 
 var canvasUtil = {
-    snakeTimer : null,
-    drawRect : function () {
-        "use strict";
-        canvasUtil.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
-    },
-    
     startSnake : function () {
         "use strict";
         $(document).keypress(function (event) {
@@ -54,18 +48,10 @@ var canvasUtil = {
 			if (code) {
 				event.preventDefault();
 			}
-			clearInterval(canvasUtil.snakeTimer);
+			clearInterval(snakeProp.snakeTimer);
 			snakeProp.snakeState = 1;
-			canvasUtil.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
+			snakeProp.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
         });
-    },
-    
-    pauseSnake : function () {
-        "use strict";
-        if (snakeProp.snakeState === 1) {
-            snakeProp.snakeState = 0;
-            clearInterval(canvasUtil.snakeTimer);
-        }
     }
 };
 
@@ -80,13 +66,16 @@ function startSnake() {
     canvasUtil.startSnake();
     if (snakeProp.snakeState === 0) {
         snakeProp.snakeState = 1;
-        canvasUtil.drawRect();
+		snakeProp.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
     }
 }
 
 function pauseSnake() {
     "use strict";
-    canvasUtil.pauseSnake();
+    if (snakeProp.snakeState === 1) {
+		snakeProp.snakeState = 0;
+		clearInterval(snakeProp.snakeTimer);
+	}
 }
 function resetSnake() {
     "use strict";
@@ -125,7 +114,8 @@ function resetAll() {
 	snakeProp.snakeScore = 0;
     snakeProp.snakeBody = [];
 	snakeProp.snakeHead = null;
-    clearInterval(canvasUtil.snakeTimer);
+	snakeProp.snakeSpeed = 10;
+    clearInterval(snakeProp.snakeTimer);
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
 	canvasContext.fillText("GAME OVER !", (canvasObj.width - 65) / 2, (canvasObj.height) / 2);
 }
@@ -149,12 +139,6 @@ function checkIfFoodTakenandUpdateBody() {
 		$('.snakeScore').text(snakeProp.snakeScore);
 	}
 	
-	/*while (i < snakeProp.snakeBody.length) {
-		snakeProp.snakeBody[i - 1].xPosition = snakeProp.snakeBody[i].xPosition;
-		snakeProp.snakeBody[i - 1].yPosition = snakeProp.snakeBody[i].yPosition;
-		snakeProp.snakeBody[i - 1].direction = snakeProp.snakeBody[i].direction;
-		i = i + 1;
-	}*/
 	snakeTail = snakeProp.snakeBody.shift();
 	snakeTail.xPosition = snakeProp.snakeHead.xPosition;
 	snakeTail.yPosition = snakeProp.snakeHead.yPosition;
