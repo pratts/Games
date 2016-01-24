@@ -123,7 +123,7 @@ function resetAll() {
 function checkIfFoodTakenandUpdateBody() {
 	"use strict";
 	var i = 1, snakePrev = null, snakeCur = null, s = null, snakeTail = null;
-	if (snakeProp.snakeHead.xPosition === food.x && snakeProp.snakeHead.yPosition === food.y) {
+	if (snakeProp.snakeHead.xPosition >= food.x && snakeProp.snakeHead.xPosition < (food.x + 4) && snakeProp.snakeHead.yPosition >= food.y && snakeProp.snakeHead.yPosition < (food.y + 4)) {
 		s = new SnakeObj(food.x, food.y, snakeProp.snakeHead.direction);
 		snakeProp.snakeBody.unshift(s);
 		canvasContext.clearRect(food.x, food.y, 8, 8);
