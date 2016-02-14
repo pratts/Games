@@ -11,18 +11,35 @@ function clearAndDraw() {
 	}
 }
 
+var validations = {
+	validateHead : function (snakeHead) {
+		"use strict";
+		return ((snakeHead.xPosition <= canvasObj.width) && (snakeHead.yPosition <= canvasObj.height) && (snakeHead.xPosition >= 0) && (snakeHead.yPosition >= 0));
+	},
+	
+	validateHeadAndBody : function (snake) {
+		"use strict";
+		return (snake.xPosition <= canvasObj.width && snake.yPosition <= canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0);
+	},
+	
+	validateHeadAndFood : function () {
+		"use strict";
+		return (snakeProp.snakeHead.xPosition >= food.x && snakeProp.snakeHead.xPosition < (food.x + 4) && snakeProp.snakeHead.yPosition >= food.y && snakeProp.snakeHead.yPosition < (food.y + 4));
+	}
+};
+
 function snakeMovement() {
 	"use strict";
 	var direction = snakeProp.snakeHead.direction;
 	if (validateSnakePosition()) {
 		if (direction === "moveUp") {
-			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition - 1;
+			snakeProp.snakeHead.yPosition -= 1;
 		} else if (direction === "moveRight") {
-			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition + 1;
+			snakeProp.snakeHead.xPosition += 1;
 		} else if (direction === "moveDown") {
-			snakeProp.snakeHead.yPosition = snakeProp.snakeHead.yPosition + 1;
+			snakeProp.snakeHead.yPosition += 1;
 		} else if (direction === "moveLeft") {
-			snakeProp.snakeHead.xPosition = snakeProp.snakeHead.xPosition - 1;
+			snakeProp.snakeHead.xPosition -= 1;
 		}
 		checkIfFoodTakenandUpdateBody();
 		clearAndDraw();
@@ -90,12 +107,13 @@ function resetSnake() {
 function validateSnakePosition() {
 	"use strict";
 	var snakeHead = snakeProp.snakeBody[snakeProp.snakeBody.length - 1], i = null, snake = null;
-	if ((snakeHead.xPosition <= canvasObj.width) && (snakeHead.yPosition <= canvasObj.height) && (snakeHead.xPosition >= 0) && (snakeHead.yPosition >= 0)) {
+	
+	if (validations.validateHead(snakeHead)) {
 		i = snakeProp.snakeBody.length - 2;
 		snake = null;
 		while (i > 0) {
 			snake = snakeProp.snakeBody[i];
-			if ((snake.xPosition <= canvasObj.width && snake.yPosition <= canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0)) {
+			if (validations.validateHeadAndBody(snake)) {
 				if (snake.xPosition === snakeHead.xPosition && snake.yPosition === snakeHead.yPosition) {
 					return false;
 				}
@@ -123,7 +141,7 @@ function resetAll() {
 function checkIfFoodTakenandUpdateBody() {
 	"use strict";
 	var i = 1, snakePrev = null, snakeCur = null, s = null, snakeTail = null;
-	if (snakeProp.snakeHead.xPosition >= food.x && snakeProp.snakeHead.xPosition < (food.x + 4) && snakeProp.snakeHead.yPosition >= food.y && snakeProp.snakeHead.yPosition < (food.y + 4)) {
+	if (validations.validateHeadAndFood()) {
 		s = new SnakeObj(food.x, food.y, snakeProp.snakeHead.direction);
 		snakeProp.snakeBody.unshift(s);
 		canvasContext.clearRect(food.x, food.y, 8, 8);
