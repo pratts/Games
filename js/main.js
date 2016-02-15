@@ -25,12 +25,60 @@ var food = {
     y : 0
 };
 
+var obstaclesArr = [];
+
 var canvasObj = document.getElementById("canvasElem");
 var canvasContext = null;
 if (canvasObj.getContext) {
 	canvasContext = canvasObj.getContext('2d');
 	canvasContext.fillStyle = "rgb(255, 255, 255)";
 	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
+}
+
+function pointForSnakeOrFood(x, y) {
+	"use strict";
+	var i = 0;
+	if (x === food.x && y === food.y) {
+		return true;
+	}
+	for (i = 0; i < snakeProp.snakeBody.length; i += 1) {
+		if (snakeProp.snakeBody[i].xPosition === x && snakeProp.snakeBody[i].yPosition === y) {
+			return true;
+		}
+	}
+	
+	for (i = 0; i < obstaclesArr.length; i += 1) {
+		if (obstaclesArr[i].x === x && obstaclesArr[i].y === y) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function createObstacles() {
+	"use strict";
+	var x, y, count = 0;
+	
+	while (count < 3) {
+		x = randomIntFromInterval(1, canvasObj.width - 1);
+		y = randomIntFromInterval(1, canvasObj.height - 1);
+		if (!pointForSnakeOrFood(x, y)) {
+			obstaclesArr.push({"x" : x, "y" : y});
+			switch (count) {
+			case 0:
+				canvasContext.fillRect(x, y, 2, 80);
+				break;
+			case 1:
+				canvasContext.fillRect(x, y, 8, 20);
+				break;
+			case 2:
+				canvasContext.fillRect(x, y, 80, 80);
+				break;
+			}
+			
+			count += 1;
+		}
+	}
 }
 
 function createSnakeAndFood() {
@@ -46,4 +94,5 @@ function createSnakeAndFood() {
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
     food.x = randomIntFromInterval(1, canvasObj.width - 1);
     food.y = randomIntFromInterval(1, canvasObj.height - 1);
+	createObstacles();
 }

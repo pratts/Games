@@ -1,4 +1,4 @@
-/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTakenandUpdateBody, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood*/
+/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTakenandUpdateBody, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood, obstaclesArr*/
 function clearAndDraw() {
 	"use strict";
 	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
@@ -8,6 +8,20 @@ function clearAndDraw() {
 		snake = snakeProp.snakeBody[i];
 		canvasContext.fillRect(snake.xPosition, snake.yPosition, 8, 8);
 		i = i + 1;
+	}
+	
+	for (i = 0; i < obstaclesArr.length; i += 1) {
+		switch (i) {
+		case 0:
+			canvasContext.fillRect(obstaclesArr[i].x, obstaclesArr[i].y, 2, 80);
+			break;
+		case 1:
+			canvasContext.fillRect(obstaclesArr[i].x, obstaclesArr[i].y, 80, 2);
+			break;
+		case 2:
+			canvasContext.fillRect(obstaclesArr[i].x, obstaclesArr[i].y, 80, 80);
+			break;
+		}
 	}
 }
 
