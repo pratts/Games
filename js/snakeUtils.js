@@ -3,7 +3,7 @@ function clearAndDraw() {
 	"use strict";
 	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
 	canvasContext.fillRect(food.x, food.y, 8, 8);
-	var i = 0, snake = null;
+	var i = 0, snake = null, obstacle;
 	while (i < snakeProp.snakeBody.length) {
 		snake = snakeProp.snakeBody[i];
 		canvasContext.fillRect(snake.xPosition, snake.yPosition, 8, 8);
@@ -11,17 +11,8 @@ function clearAndDraw() {
 	}
 	
 	for (i = 0; i < obstaclesArr.length; i += 1) {
-		switch (i) {
-		case 0:
-			canvasContext.fillRect(obstaclesArr[i].x, obstaclesArr[i].y, 2, 80);
-			break;
-		case 1:
-			canvasContext.fillRect(obstaclesArr[i].x, obstaclesArr[i].y, 80, 2);
-			break;
-		case 2:
-			canvasContext.fillRect(obstaclesArr[i].x, obstaclesArr[i].y, 80, 80);
-			break;
-		}
+		obstacle = obstaclesArr[i];
+		canvasContext.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 	}
 }
 

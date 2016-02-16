@@ -63,15 +63,17 @@ function createObstacles() {
 		x = randomIntFromInterval(1, canvasObj.width - 1);
 		y = randomIntFromInterval(1, canvasObj.height - 1);
 		if (!pointForSnakeOrFood(x, y)) {
-			obstaclesArr.push({"x" : x, "y" : y});
 			switch (count) {
 			case 0:
+				obstaclesArr.push({"x" : x, "y" : y, "width" : 2, "height" : 80});
 				canvasContext.fillRect(x, y, 2, 80);
 				break;
 			case 1:
+				obstaclesArr.push({"x" : x, "y" : y, "width" : 8, "height" : 20});
 				canvasContext.fillRect(x, y, 8, 20);
 				break;
 			case 2:
+				obstaclesArr.push({"x" : x, "y" : y, "width" : 80, "height" : 80});
 				canvasContext.fillRect(x, y, 80, 80);
 				break;
 			}
