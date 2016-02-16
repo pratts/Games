@@ -29,7 +29,7 @@ var validations = {
 	
 	validateHeadAndFood : function () {
 		"use strict";
-		return (snakeProp.snakeHead.xPosition >= food.x && snakeProp.snakeHead.xPosition < (food.x + 4) && snakeProp.snakeHead.yPosition >= food.y && snakeProp.snakeHead.yPosition < (food.y + 4));
+		return !(((snakeProp.snakeHead.xPosition + 8) < food.x) || (snakeProp.snakeHead.xPosition > (food.x + 8)) || ((snakeProp.snakeHead.yPosition + 8) < food.y) || (snakeProp.snakeHead.yPosition > (food.y + 8)));
 	}
 };
 
