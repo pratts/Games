@@ -2,7 +2,11 @@
 function clearAndDraw() {
 	"use strict";
 	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
+	
+	canvasContext.fillStyle = "rgb(255, 255, 0)";
 	canvasContext.fillRect(food.x, food.y, 8, 8);
+	
+	canvasContext.fillStyle = "rgb(255, 255, 255)";
 	var i = 0, snake = null, obstacle;
 	while (i < snakeProp.snakeBody.length) {
 		snake = snakeProp.snakeBody[i];
@@ -30,6 +34,18 @@ var validations = {
 	validateHeadAndFood : function () {
 		"use strict";
 		return !(((snakeProp.snakeHead.xPosition + 8) < food.x) || (snakeProp.snakeHead.xPosition > (food.x + 8)) || ((snakeProp.snakeHead.yPosition + 8) < food.y) || (snakeProp.snakeHead.yPosition > (food.y + 8)));
+	},
+	
+	validateHeadAndObstacle : function () {
+		"use strict";
+		var i, obstacle;
+		for (i = 0; i < obstaclesArr.length; i += 1) {
+			obstacle = obstaclesArr[i];
+			if (!(((snakeProp.snakeHead.xPosition + 8) < obstacle.x) || (snakeProp.snakeHead.xPosition > (obstacle.x + obstacle.width)) || ((snakeProp.snakeHead.yPosition + 8) < obstacle.y) || (snakeProp.snakeHead.yPosition > (obstacle.y + obstacle.height)))) {
+				return true;
+			}
+		}
+		return false;
 	}
 };
 
@@ -113,7 +129,7 @@ function validateSnakePosition() {
 	"use strict";
 	var snakeHead = snakeProp.snakeBody[snakeProp.snakeBody.length - 1], i = null, snake = null;
 	
-	if (validations.validateHead(snakeHead)) {
+	if (validations.validateHead(snakeHead) && !validations.validateHeadAndObstacle()) {
 		i = snakeProp.snakeBody.length - 2;
 		snake = null;
 		while (i > 0) {
@@ -138,6 +154,7 @@ function resetAll() {
     snakeProp.snakeBody = [];
 	snakeProp.snakeHead = null;
 	snakeProp.snakeSpeed = 10;
+	obstaclesArr.length = 0;
     clearInterval(snakeProp.snakeTimer);
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
 	canvasContext.fillText("GAME OVER !", (canvasObj.width - 65) / 2, (canvasObj.height) / 2);
