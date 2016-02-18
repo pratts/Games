@@ -1,23 +1,9 @@
 /*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTakenandUpdateBody, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood, obstaclesArr*/
-function clearAndDraw() {
+function clearAndDraw(snakePointRemoved) {
 	"use strict";
-	canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
-	
-	canvasContext.fillStyle = "rgb(255, 255, 0)";
-	canvasContext.fillRect(food.x, food.y, 8, 8);
-	
 	canvasContext.fillStyle = "rgb(255, 255, 255)";
-	var i = 0, snake = null, obstacle;
-	while (i < snakeProp.snakeBody.length) {
-		snake = snakeProp.snakeBody[i];
-		canvasContext.fillRect(snake.xPosition, snake.yPosition, 8, 8);
-		i = i + 1;
-	}
-	
-	for (i = 0; i < obstaclesArr.length; i += 1) {
-		obstacle = obstaclesArr[i];
-		canvasContext.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-	}
+	canvasContext.clearRect(snakePointRemoved.xPosition, snakePointRemoved.yPosition, 8, 8);
+	canvasContext.fillRect(snakeProp.snakeHead.xPosition, snakeProp.snakeHead.yPosition, 8, 8);
 }
 
 var validations = {
@@ -51,7 +37,7 @@ var validations = {
 
 function snakeMovement() {
 	"use strict";
-	var direction = snakeProp.snakeHead.direction;
+	var direction = snakeProp.snakeHead.direction, snakePointRemoved;
 	if (validateSnakePosition()) {
 		if (direction === "moveUp") {
 			snakeProp.snakeHead.yPosition -= 1;
@@ -62,8 +48,8 @@ function snakeMovement() {
 		} else if (direction === "moveLeft") {
 			snakeProp.snakeHead.xPosition -= 1;
 		}
-		checkIfFoodTakenandUpdateBody();
-		clearAndDraw();
+		snakePointRemoved = checkIfFoodTakenandUpdateBody();
+		clearAndDraw(snakePointRemoved);
 	} else {
 		resetAll();
 	}
@@ -162,13 +148,14 @@ function resetAll() {
 
 function checkIfFoodTakenandUpdateBody() {
 	"use strict";
-	var i = 1, snakePrev = null, snakeCur = null, s = null, snakeTail = null;
+	var i = 1, snakePrev = null, snakeCur = null, s = null, snakeTail = null, snakePoint;
 	if (validations.validateHeadAndFood()) {
 		s = new SnakeObj(food.x, food.y, snakeProp.snakeHead.direction);
 		snakeProp.snakeBody.unshift(s);
 		canvasContext.clearRect(food.x, food.y, 8, 8);
 		food.x = randomIntFromInterval(1, canvasObj.width - 1);
 		food.y = randomIntFromInterval(1, canvasObj.height - 1);
+		canvasContext.fillStyle = "rgb(255, 255, 0)";
 		canvasContext.fillRect(food.x, food.y, 8, 8);
 		snakeProp.snakeScore += 1;
 		if (snakeProp.snakeScore > 5) {
@@ -179,9 +166,8 @@ function checkIfFoodTakenandUpdateBody() {
 		$('.snakeScore').text(snakeProp.snakeScore);
 	}
 	
-	snakeTail = snakeProp.snakeBody.shift();
-	snakeTail.xPosition = snakeProp.snakeHead.xPosition;
-	snakeTail.yPosition = snakeProp.snakeHead.yPosition;
-	snakeTail.direction = snakeProp.snakeHead.direction;
+	snakePoint = snakeProp.snakeBody.shift();
+	snakeTail = new SnakeObj(snakeProp.snakeHead.xPosition, snakeProp.snakeHead.yPosition, snakeProp.snakeHead.direction);
 	snakeProp.snakeBody.push(snakeTail);
+	return snakePoint;
 }

@@ -57,6 +57,7 @@ function pointForSnakeOrFood(x, y) {
 
 function createObstacles() {
 	"use strict";
+	canvasContext.fillStyle = "rgb(255, 255, 255)";
 	var x, y, count = 0;
 	
 	while (count < 3) {
@@ -94,7 +95,11 @@ function createSnakeAndFood() {
 	}
 	snakeProp.snakeHead = new SnakeObj(i - 1, 0, "moveRight");
     canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
-    food.x = randomIntFromInterval(1, canvasObj.width - 1);
+    
+	food.x = randomIntFromInterval(1, canvasObj.width - 1);
     food.y = randomIntFromInterval(1, canvasObj.height - 1);
+	canvasContext.fillStyle = "rgb(255, 255, 0)";
+	canvasContext.fillRect(food.x, food.y, 8, 8);
+	
 	createObstacles();
 }
