@@ -1,0 +1,17 @@
+{
+  "name": "SnakeGame",
+  "description": "Snake game written in canvas",
+  "version": "0.1.0",
+  "author": {
+    "name": "Prateek Sharma",
+    "email": "prateek.usict@gmail.com"
+  },
+  "repository": "gruntjs/grunt-contrib-nodeunit",
+  "scripts": {
+    "test": "nodeunit js/test"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-nodeunit": "^0.4.1"
+  }
+}
