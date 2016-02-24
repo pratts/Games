@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Nodeunit test suite for Snake game</title>
+    <script src="js/test/nodeunit.js"></script>
+    <script src="js/test/suiteLogic.js"></script>
+  </head>
+  <body>
+    <h1 id="nodeunit-header">Test Suite Snake Game</h1>
+    <script>
+      nodeunit.run({
+        'Suite One': suiteLogic
+      }, {
+		  'textareas': null,
+		  'displayErrorsByDefault': false
+	  });
+    </script>
+  </body>
+</html>
+<!--var textareas = options.textareas;
+options.displayErrorsByDefault;-->
