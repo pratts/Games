@@ -1,4 +1,4 @@
-/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTakenandUpdateBody, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood, obstaclesArr*/
+/*global console, $, snakeProp, validateSnakePosition, updateSnakeBody, resetAll, checkIfFoodTakenandUpdateBody, canvasObj, canvasContext, food, SnakeObj, randomIntFromInterval, createSnakeAndFood, obstaclesArr, width, height*/
 function clearAndDraw(snakePointRemoved) {
 	"use strict";
 	canvasContext.fillStyle = "rgb(255, 255, 255)";
@@ -9,12 +9,12 @@ function clearAndDraw(snakePointRemoved) {
 var validations = {
 	validateHead : function (snakeHead) {
 		"use strict";
-		return ((snakeHead.xPosition <= canvasObj.width) && (snakeHead.yPosition <= canvasObj.height) && (snakeHead.xPosition >= 0) && (snakeHead.yPosition >= 0));
+		return ((snakeHead.xPosition <= width) && (snakeHead.yPosition <= height) && (snakeHead.xPosition >= 0) && (snakeHead.yPosition >= 0));
 	},
 	
-	validateHeadAndBody : function (snake) {
+	validateHeadAndBody : function (snake, snakeHead) {
 		"use strict";
-		return (snake.xPosition <= canvasObj.width && snake.yPosition <= canvasObj.height && snake.xPosition >= 0 && snake.yPosition >= 0);
+		return (snake.xPosition === snakeHead.xPosition && snake.yPosition === snakeHead.yPosition);
 	},
 	
 	validateHeadAndFood : function () {
@@ -120,8 +120,8 @@ function validateSnakePosition() {
 		snake = null;
 		while (i > 0) {
 			snake = snakeProp.snakeBody[i];
-			if (validations.validateHeadAndBody(snake)) {
-				if (snake.xPosition === snakeHead.xPosition && snake.yPosition === snakeHead.yPosition) {
+			if (validations.validateHead(snake)) {
+				if (validations.validateHeadAndBody(snake, snakeHead)) {
 					return false;
 				}
 				i = i - 1;
@@ -142,8 +142,8 @@ function resetAll() {
 	snakeProp.snakeSpeed = 10;
 	obstaclesArr.length = 0;
     clearInterval(snakeProp.snakeTimer);
-    canvasContext.clearRect(0, 0, canvasObj.width, canvasObj.height);
-	canvasContext.fillText("GAME OVER !", (canvasObj.width - 65) / 2, (canvasObj.height) / 2);
+    canvasContext.clearRect(0, 0, width, height);
+	canvasContext.fillText("GAME OVER !", (width - 65) / 2, (height) / 2);
 }
 
 function checkIfFoodTakenandUpdateBody() {
@@ -153,8 +153,8 @@ function checkIfFoodTakenandUpdateBody() {
 		s = new SnakeObj(food.x, food.y, snakeProp.snakeHead.direction);
 		snakeProp.snakeBody.unshift(s);
 		canvasContext.clearRect(food.x, food.y, 8, 8);
-		food.x = randomIntFromInterval(1, canvasObj.width - 1);
-		food.y = randomIntFromInterval(1, canvasObj.height - 1);
+		food.x = randomIntFromInterval(1, width - 1);
+		food.y = randomIntFromInterval(1, height - 1);
 		canvasContext.fillStyle = "rgb(255, 255, 0)";
 		canvasContext.fillRect(food.x, food.y, 8, 8);
 		snakeProp.snakeScore += 1;
