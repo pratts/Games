@@ -1,6 +1,16 @@
+var obstaclesArr = [];
+
+var canvasObj = document.getElementById("canvasElem");
+var height = canvasObj.height;
+var width = canvasObj.width;
+var canvasContext = null;
+if (canvasObj.getContext) {
+	canvasContext = canvasObj.getContext('2d');
+}
+
 var snake = {
 	snakeBody : [],
-	snakeHead : null,
+	snakeHead : null
 };
 
 var game = {
@@ -19,12 +29,7 @@ var SnakeObj = function (xPosition, yPosition, direction, width) {
 };
 
 var food = {
-    x : 0,
-    y : 0
+    xPosition : 0,
+    yPosition : 0,
+	width : 8
 };
-
-var obstaclesArr = [];
-
-var canvasObj = document.getElementById("canvasElem");
-var height = canvasObj.height;
-var width = canvasObj.width;
