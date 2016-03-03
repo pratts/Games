@@ -4,16 +4,16 @@ var controller = {
 		"use strict";
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	},
-    createSnakeAndFood : function (snakeProp) {
+    createSnake : function () {
         "use strict";
 		var snake = {}, i = 0, sk = null;
         snake.snakeBody = [];
         while (i < 30) {
-            sk = new SnakeObj(i, 0, "moveRight");
+            sk = new SnakeObj(i, 0, "moveRight", 8, 8);
             snake.snakeBody.push(sk);
             i = i + 1;
         }
-        snake.snakeHead = new SnakeObj(i - 1, 0, "moveRight");
+        snake.snakeHead = new SnakeObj(i - 1, 0, "moveRight", 8, 8);
 		return snake;
     },
 	createFood : function (width, height) {
@@ -21,30 +21,12 @@ var controller = {
 		var foodPoint = {};
 		foodPoint.x = controller.randomIntFromInterval(1, width - 1);
 		foodPoint.y = controller.randomIntFromInterval(1, height - 1);
+		foodPoint.width = 8;
+		foodPoint.height = 8;
 		return foodPoint;
-	},
-	pointForSnakeOrFood : function (x, y, food, snakeBody, obstaclesArr) {
-		"use strict";
-		var i = 0;
-		if (x === food.x && y === food.y) {
-			return true;
-		}
-		for (i = 0; i < snakeBody.length; i += 1) {
-			if (snakeBody[i].xPosition === x && snakeBody[i].yPosition === y) {
-				return true;
-			}
-		}
-
-		for (i = 0; i < obstaclesArr.length; i += 1) {
-			if (obstaclesArr[i].x === x && obstaclesArr[i].y === y) {
-				return true;
-			}
-		}
-		return false;
 	},
 	createObstacles : function (width, height) {
 		"use strict";
-		controller.changeCanvasStyle("rgb(255, 255, 255)");
 		var x, y, count = 0, obstaclesAr;
 
 		while (count < 3) {
@@ -70,6 +52,25 @@ var controller = {
 };
 
 var validations = {
+	pointForSnakeOrFood : function (x, y, food, snakeBody, obstaclesArr) {
+		"use strict";
+		var i = 0;
+		if (x === food.x && y === food.y) {
+			return true;
+		}
+		for (i = 0; i < snakeBody.length; i += 1) {
+			if (snakeBody[i].xPosition === x && snakeBody[i].yPosition === y) {
+				return true;
+			}
+		}
+
+		for (i = 0; i < obstaclesArr.length; i += 1) {
+			if (obstaclesArr[i].x === x && obstaclesArr[i].y === y) {
+				return true;
+			}
+		}
+		return false;
+	},
 	validateHead : function (snakeHead, width, height) {
 		"use strict";
 		return ((snakeHead.xPosition <= width) && (snakeHead.yPosition <= height) && (snakeHead.xPosition >= 0) && (snakeHead.yPosition >= 0));
@@ -119,44 +120,37 @@ var validations = {
 	}
 };
 
-var canvasOps = {
-	clearCanvas: function (canvasContext, width, height) {
+var gameLogic = {
+	startGame : function () {
 		"use strict";
-        canvasContext.clearRect(0, 0, width, height);
-    },
-	changeCanvasStyle : function (canvasContext, colorStr) {
-		"use strict";
-		canvasContext.fillStyle = colorStr;
+		if (game.state === -1) {
+			canvasOps.clearCanvas(canvasContext, width, height);
+			snake = controller.createSnakeAndFood();
+			food = controller.createFood(width, height);
+			obstaclesArr = controller.createObstacles(width, height);
+			snake = controller.createSnake();
+			canvasOps.createAll(snake.snakeBody, obstaclesArr, food, canvasContext, width, height);
+		}
+		gameLogic.startSnake(snake);
 	},
-	fillRect : function (canvasContext, point, colorStr) {
-		"use strict";
-		canvasContext.fillRect(point.xPosition, point.yPosition, point.width, point.height);
-	}
-};
-
-var game = {
-	startSnake : function () {
+	pauseGame : function () {
 		"use strict";
 	},
-	pauseSnake : function () {
+	resetGame: function () {
 		"use strict";
 	},
-	resetSnake: function () {
+	resetAll : function (snakeProp) {
 		"use strict";
-	},
-	function resetAll() {
-		"use strict";
-		snakeProp.snakeState = -1;
-		snakeProp.snakeScore = 0;
-		snakeProp.snakeBody = [];
-		snakeProp.snakeHead = null;
-		snakeProp.snakeSpeed = 10;
+		snake = {};
+		food = {};
 		obstaclesArr.length = 0;
-		clearInterval(snakeProp.snakeTimer);
-		canvasContext.clearRect(0, 0, width, height);
-		canvasContext.fillText("GAME OVER !", (width - 65) / 2, (height) / 2);
+		clearInterval(game.timer);
+		game.score = 0;
+		game.speed = 10;
+		game.state = -1;
+		game.timer = null;
 	},
-	startSnake : function (snakeProp) {
+	startSnake : function (snakeProp, game) {
         "use strict";
         $(document).keypress(function (event) {
             var code = event.keyCode || event.which;
@@ -173,13 +167,13 @@ var game = {
 				event.preventDefault();
 			}
 			clearInterval(snakeProp.snakeTimer);
-			snakeProp.snakeState = 1;
-			snakeProp.snakeTimer = setInterval(snakeMovement, snakeProp.snakeSpeed);
+			game.state = 1;
+			game.timer = setInterval(gameLogic.snakeMovement, game.speed);
         });
     },
 	snakeMovement : function () {
 		"use strict";
-		var direction = snakeProp.snakeHead.direction, snakePointRemoved;
+		var direction = snakeProp.snakeHead.direction;
 		if (validateSnakePosition()) {
 			if (direction === "moveUp") {
 				snakeProp.snakeHead.yPosition -= 1;
@@ -190,10 +184,9 @@ var game = {
 			} else if (direction === "moveLeft") {
 				snakeProp.snakeHead.xPosition -= 1;
 			}
-			snakePointRemoved = checkIfFoodTakenandUpdateBody();
-			clearAndDraw(snakePointRemoved);
 		} else {
-			resetAll();
+			gameLogic.resetAll();
+			canvasOps.showOverMsg(canvasContext, width, height);
 		}
 	}
 };

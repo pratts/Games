@@ -20,16 +20,18 @@ var game = {
     state : -1  //0 for stopped and 1 for moving
 };
 
-var SnakeObj = function (xPosition, yPosition, direction, width) {
+var SnakeObj = function (xPosition, yPosition, direction, width, height) {
 	"use strict";
 	this.xPosition = xPosition;
     this.yPosition = yPosition;
     this.direction = direction;
     this.width = width;
+	this.height = height;
 };
 
 var food = {
     xPosition : 0,
     yPosition : 0,
-	width : 8
+	width : 8,
+	height : 8
 };
