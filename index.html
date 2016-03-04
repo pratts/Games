@@ -8,15 +8,16 @@
     <body>
         <div style="position: relative;">
             <div style="width: 30%;position: relative;margin: 0px auto;">
-                <button onclick="startSnake()">Start</button>
-                <button onclick="pauseSnake()">Pause</button>
-                <button onclick="resetSnake()">Reset</button>
+                <button onclick="start()">Start</button>
+                <button onclick="pause()">Pause</button>
+                <button onclick="reset()">Reset</button>
                 <p style="display:inline;">Score : <span class="snakeScore">0</span></p>
             </div>
             <canvas id="canvasElem" class="canvasElem" width="600" height="500"></canvas>
         </div>
     </body>
     <script src="js/api/jquery.min.js"></script>
-	<script src="js/api/main.js"></script>
-    <script src="js/api/snakeUtils.js"></script>
+	<script src="js/api/snakeModel.js"></script>
+    <script src="js/api/snakeView.js"></script>
+	<script src="js/api/snakeController.js"></script>
 </html>
