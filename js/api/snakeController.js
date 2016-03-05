@@ -32,7 +32,7 @@ var validations = {
 	
 	validateHeadAndFood : function (snakeHead, food) {
 		"use strict";
-		return !(((snakeHead.xPosition + 8) < food.x) || (snakeHead.xPosition > (food.x + 8)) || ((snakeHead.yPosition + 8) < food.y) || (snakeHead.yPosition > (food.y + 8)));
+		return !(((snakeHead.xPosition + snakeHead.width) < food.xPosition) || (snakeHead.xPosition > (food.xPosition + 8)) || ((snakeHead.yPosition + snakeHead.height) < food.yPosition) || (snakeHead.yPosition > (food.yPosition + food.height)));
 	},
 	
 	validateHeadAndObstacle : function (obstaclesArr, snakeHead) {
@@ -89,6 +89,13 @@ var controller = {
 		var foodPoint = {};
 		foodPoint.xPosition = controller.randomIntFromInterval(1, width - 1);
 		foodPoint.yPosition = controller.randomIntFromInterval(1, height - 1);
+		while (true) {
+			if (!validations.pointForSnakeOrFood(foodPoint.xPosition, foodPoint.yPosition, {"xPosition" : -1, "yPosition" : -1}, snake.snakeBody, obstaclesArr)) {
+				foodPoint.xPosition = controller.randomIntFromInterval(1, width - 1);
+				foodPoint.yPosition = controller.randomIntFromInterval(1, height - 1);
+				break;
+			}
+		}
 		foodPoint.width = 8;
 		foodPoint.height = 8;
 		return foodPoint;
@@ -132,6 +139,7 @@ var gameLogic = {
 		}
 		gameLogic.startSnake(snake, game);
 		game.timer = setInterval(gameLogic.snakeMovement, game.speed);
+		game.state = 1;
 	},
 	pauseGame : function () {
 		"use strict";
@@ -153,6 +161,7 @@ var gameLogic = {
 		game.speed = 10;
 		game.state = -1;
 		game.timer = null;
+		canvasOps.updateScore(0);
 	},
 	startSnake : function (snakeProp, game) {
         "use strict";
@@ -188,9 +197,65 @@ var gameLogic = {
 			} else if (direction === "moveLeft") {
 				snake.snakeHead.xPosition -= 1;
 			}
+			gameLogic.updateSnakeBody(snake);
+			if (validations.validateHeadAndFood(snake.snakeHead, food)) {
+				gameLogic.addFoodToBody();
+				game.score += 1;
+				canvasOps.updateScore(game.score);
+				initialize.initializeFood(controller.createFood(width, height));
+				gameLogic.updateGameSpeed();
+			}
+			canvasOps.createAll(snake.snakeBody, obstaclesArr, food, canvasContext, width, height);
 		} else {
 			gameLogic.resetAll();
 			canvasOps.showOverMsg(canvasContext, width, height);
+		}
+	},
+	updateSnakeBody : function (snake) {
+		"use strict";
+		var i = 0;
+		for (i = 0; i < snake.snakeBody.length - 1; i += 1) {
+			snake.snakeBody[i].xPosition = snake.snakeBody[i + 1].xPosition;
+			snake.snakeBody[i].yPosition = snake.snakeBody[i + 1].yPosition;
+			snake.snakeBody[i].direction = snake.snakeBody[i + 1].direction;
+		}
+		snake.snakeBody[i].xPosition = snake.snakeHead.xPosition;
+		snake.snakeBody[i].yPosition = snake.snakeHead.yPosition;
+		snake.snakeBody[i].direction = snake.snakeHead.direction;
+	},
+	addFoodToBody : function () {
+		"use strict";
+		var snakePoint = snake.snakeBody[0], pointToAdd = null;
+		switch (snakePoint.direction) {
+		case "moveLeft":
+			pointToAdd = new SnakeObj(snakePoint.xPosition + 1, snakePoint.yPosition, snakePoint.direction, snakePoint.width, snakePoint.height);
+			break;
+		case "moveRight":
+			pointToAdd = new SnakeObj(snakePoint.xPosition - 1, snakePoint.yPosition, snakePoint.direction, snakePoint.width, snakePoint.height);
+			break;
+		case "moveDown":
+			pointToAdd = new SnakeObj(snakePoint.xPosition, snakePoint.yPosition + 1, snakePoint.direction, snakePoint.width, snakePoint.height);
+			break;
+		case "moveUp":
+			pointToAdd = new SnakeObj(snakePoint.xPosition, snakePoint.yPosition - 1, snakePoint.direction, snakePoint.width, snakePoint.height);
+			break;
+		}
+		snake.snakeBody.unshift(pointToAdd);
+	},
+	updateGameSpeed : function () {
+		"use strict";
+		if (game.score > 5) {
+			game.speed = 8;
+		} else if (game.score > 15) {
+			game.speed = 6;
+		} else if (game.score > 25) {
+			game.speed = 4;
+		} else if (game.score > 35) {
+			game.speed = 2;
+		} else if (game.score > 45) {
+			game.speed = 1;
+		} else if (game.score > 50) {
+			game.speed = 0;
 		}
 	}
 };
