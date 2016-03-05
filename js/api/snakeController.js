@@ -1,56 +1,5 @@
-/*global SnakeObj, game, canvasOps, canvasContext, width, height, snake, food, obstaclesArr, $*/
-var controller = {
-	randomIntFromInterval : function (min, max) {
-		"use strict";
-		return Math.floor(Math.random() * (max - min + 1) + min);
-	},
-    createSnake : function () {
-        "use strict";
-		var snake = {}, i = 0, sk = null;
-        snake.snakeBody = [];
-        while (i < 30) {
-            sk = new SnakeObj(i, 0, "moveRight", 8, 8);
-            snake.snakeBody.push(sk);
-            i = i + 1;
-        }
-        snake.snakeHead = new SnakeObj(i - 1, 0, "moveRight", 8, 8);
-		return snake;
-    },
-	createFood : function (width, height) {
-		"use strict";
-		var foodPoint = {};
-		foodPoint.x = controller.randomIntFromInterval(1, width - 1);
-		foodPoint.y = controller.randomIntFromInterval(1, height - 1);
-		foodPoint.width = 8;
-		foodPoint.height = 8;
-		return foodPoint;
-	},
-	createObstacles : function (width, height) {
-		"use strict";
-		var x, y, count = 0, obstaclesAr = [];
-
-		while (count < 3) {
-			x = controller.randomIntFromInterval(1, width - 1);
-			y = controller.randomIntFromInterval(1, height - 1);
-			if (!validations.pointForSnakeOrFood(x, y, food, snake.snakeBody, obstaclesAr)) {
-				switch (count) {
-				case 0:
-					obstaclesAr.push({"x" : x, "y" : y, "width" : 2, "height" : 80});
-					break;
-				case 1:
-					obstaclesAr.push({"x" : x, "y" : y, "width" : 8, "height" : 20});
-					break;
-				case 2:
-					obstaclesAr.push({"x" : x, "y" : y, "width" : 80, "height" : 80});
-					break;
-				}
-				count += 1;
-			}
-		}
-		return obstaclesAr;
-	}
-};
-
+/*global SnakeObj, game, canvasOps, canvasContext, width, height, snake, food, obstaclesArr,
+$, initialize*/
 var validations = {
 	pointForSnakeOrFood : function (x, y, food, snakeBody, obstaclesArr) {
 		"use strict";
@@ -91,22 +40,22 @@ var validations = {
 		var i, obstacle;
 		for (i = 0; i < obstaclesArr.length; i += 1) {
 			obstacle = obstaclesArr[i];
-			if (!(((snakeHead.xPosition + 8) < obstacle.x) || (snakeHead.xPosition > (obstacle.x + obstacle.width)) || ((snakeHead.yPosition + 8) < obstacle.y) || (snakeHead.yPosition > (obstacle.y + obstacle.height)))) {
+			if (!(((snakeHead.xPosition + 8) < obstacle.xPosition) || (snakeHead.xPosition > (obstacle.xPosition + obstacle.width)) || ((snakeHead.yPosition + 8) < obstacle.yPosition) || (snakeHead.yPosition > (obstacle.yPosition + obstacle.height)))) {
 				return true;
 			}
 		}
 		return false;
 	},
-	validateSnakePosition : function (snakeBody) {
+	validateSnakePosition : function (snake) {
 		"use strict";
-		var snakeHead = snakeBody[snakeBody.length - 1], i = null, snake = null;
+		var snakeHead = snake.snakeBody[snake.snakeBody.length - 1], i = null, snakePoint = null;
 
 		if (validations.validateHead(snake.snakeHead, width, height) && !validations.validateHeadAndObstacle(obstaclesArr, snake.snakeHead)) {
-			i = snakeBody.length - 2;
-			snake = null;
-			while (i > 0) {
-				snake = snakeBody[i];
-				if (validations.validateHeadAndBody(snake, snakeHead)) {
+			i = snake.snakeBody.length - 2;
+			snakePoint = null;
+			while (i >= 0) {
+				snakePoint = snake.snakeBody[i];
+				if (validations.validateHeadAndBody(snakePoint, snakeHead)) {
 					return false;
 				}
 				i = i - 1;
@@ -118,19 +67,71 @@ var validations = {
 	}
 };
 
+var controller = {
+	randomIntFromInterval : function (min, max) {
+		"use strict";
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	},
+    createSnake : function () {
+        "use strict";
+		var snake = {}, i = 0, sk = null;
+        snake.snakeBody = [];
+        while (i < 30) {
+            sk = new SnakeObj(i, 0, "moveRight", 8, 8);
+            snake.snakeBody.push(sk);
+            i = i + 1;
+        }
+        snake.snakeHead = new SnakeObj(i - 1, 0, "moveRight", 8, 8);
+		return snake;
+    },
+	createFood : function (width, height) {
+		"use strict";
+		var foodPoint = {};
+		foodPoint.xPosition = controller.randomIntFromInterval(1, width - 1);
+		foodPoint.yPosition = controller.randomIntFromInterval(1, height - 1);
+		foodPoint.width = 8;
+		foodPoint.height = 8;
+		return foodPoint;
+	},
+	createObstacles : function (width, height) {
+		"use strict";
+		var x, y, count = 0, obstaclesAr = [];
+
+		while (count < 3) {
+			x = controller.randomIntFromInterval(1, width - 1);
+			y = controller.randomIntFromInterval(1, height - 1);
+			if (!validations.pointForSnakeOrFood(x, y, food, snake.snakeBody, obstaclesAr)) {
+				switch (count) {
+				case 0:
+					obstaclesAr.push({"xPosition" : x, "yPosition" : y, "width" : 2, "height" : 80});
+					break;
+				case 1:
+					obstaclesAr.push({"xPosition" : x, "yPosition" : y, "width" : 8, "height" : 20});
+					break;
+				case 2:
+					obstaclesAr.push({"xPosition" : x, "yPosition" : y, "width" : 80, "height" : 80});
+					break;
+				}
+				count += 1;
+			}
+		}
+		return obstaclesAr;
+	}
+};
+
 var gameLogic = {
 	startGame : function () {
 		"use strict";
 		if (game.state === -1) {
 			gameLogic.resetAll();
 			canvasOps.clearCanvas(canvasContext, width, height);
-			snake = controller.createSnake();
-			food = controller.createFood(width, height);
-			obstaclesArr = controller.createObstacles(width, height);
-			snake = controller.createSnake();
+			initialize.initializeSnake(controller.createSnake());
+			initialize.initializeFood(controller.createFood(width, height));
+			initialize.initializeObstacles(controller.createObstacles(width, height));
 			canvasOps.createAll(snake.snakeBody, obstaclesArr, food, canvasContext, width, height);
 		}
-		gameLogic.startSnake(snake);
+		gameLogic.startSnake(snake, game);
+		game.timer = setInterval(gameLogic.snakeMovement, game.speed);
 	},
 	pauseGame : function () {
 		"use strict";
@@ -144,9 +145,9 @@ var gameLogic = {
 	},
 	resetAll : function () {
 		"use strict";
-		snake = {};
-		food = {};
-		obstaclesArr.length = 0;
+		initialize.initializeFood({"xPosition" : 0, "yPosition" : 0, "width" : 8, "height" : 8});
+		initialize.initializeSnake({"snakeBody" : [], "snakeHead" : {}});
+		initialize.initializeObstacles([]);
 		clearInterval(game.timer);
 		game.score = 0;
 		game.speed = 10;
@@ -169,7 +170,7 @@ var gameLogic = {
 			if (code) {
 				event.preventDefault();
 			}
-			clearInterval(snakeProp.snakeTimer);
+			clearInterval(game.timer);
 			game.state = 1;
 			game.timer = setInterval(gameLogic.snakeMovement, game.speed);
         });
@@ -177,7 +178,7 @@ var gameLogic = {
 	snakeMovement : function () {
 		"use strict";
 		var direction = snake.snakeHead.direction;
-		if (validations.validateSnakePosition(snake.snakeHead)) {
+		if (validations.validateSnakePosition(snake)) {
 			if (direction === "moveUp") {
 				snake.snakeHead.yPosition -= 1;
 			} else if (direction === "moveRight") {
@@ -195,11 +196,14 @@ var gameLogic = {
 };
 
 function start() {
+	"use strict";
 	gameLogic.startGame();
 }
 function pause() {
+	"use strict";
 	gameLogic.pauseGame();
 }
 function reset() {
+	"use strict";
 	gameLogic.resetGame();
 }

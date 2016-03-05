@@ -35,3 +35,22 @@ var food = {
 	width : 8,
 	height : 8
 };
+
+var initialize = {
+	initializeSnake : function (tempSnake) {
+		"use strict";
+		snake.snakeBody = tempSnake.snakeBody;
+		snake.snakeHead = tempSnake.snakeHead;
+	},
+	initializeFood : function (tempFood) {
+		"use strict";
+		food.xPosition = tempFood.xPosition;
+		food.yPosition = tempFood.yPosition;
+		food.width = tempFood.width;
+		food.height = tempFood.height;
+	},
+	initializeObstacles : function (tempObs) {
+		"use strict";
+		obstaclesArr = tempObs;
+	}
+};
