@@ -29,6 +29,9 @@ var canvasOps = {
 		
 		// create snake
 		canvasOps.changeCanvasStyle(canvasContext, "rgb(255, 255, 255)");
+		for (i = 0; i < snakeBody.length; i += 1) {
+			canvasOps.fillRect(canvasContext, snakeBody[i]);
+		}
 		
 		// create obstacles
 		for (i = 0; i < obstacles.length; i += 1) {
