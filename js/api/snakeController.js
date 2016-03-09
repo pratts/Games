@@ -202,10 +202,12 @@ var gameLogic = {
 				gameLogic.addFoodToBody();
 				game.score += 1;
 				canvasOps.updateScore(game.score);
-				initialize.initializeFood(controller.createFood(width, height));
 				gameLogic.updateGameSpeed();
+				
+				canvasOps.clearPoint(food, canvasContext);
+				initialize.initializeFood(controller.createFood(width, height));
+				canvasOps.createFoodPoint(food, canvasContext, width, height);
 			}
-			canvasOps.createAll(snake.snakeBody, obstaclesArr, food, canvasContext, width, height);
 		} else {
 			gameLogic.resetAll();
 			canvasOps.showOverMsg(canvasContext, width, height);
@@ -213,15 +215,16 @@ var gameLogic = {
 	},
 	updateSnakeBody : function (snake) {
 		"use strict";
-		var i = 0;
-		for (i = 0; i < snake.snakeBody.length - 1; i += 1) {
-			snake.snakeBody[i].xPosition = snake.snakeBody[i + 1].xPosition;
-			snake.snakeBody[i].yPosition = snake.snakeBody[i + 1].yPosition;
-			snake.snakeBody[i].direction = snake.snakeBody[i + 1].direction;
-		}
-		snake.snakeBody[i].xPosition = snake.snakeHead.xPosition;
-		snake.snakeBody[i].yPosition = snake.snakeHead.yPosition;
-		snake.snakeBody[i].direction = snake.snakeHead.direction;
+		var snakeTail = snake.snakeBody.shift();
+		canvasOps.clearPoint(snakeTail, canvasContext);
+		
+		snakeTail.xPosition = snake.snakeHead.xPosition;
+		snakeTail.yPosition = snake.snakeHead.yPosition;
+		snakeTail.direction = snake.snakeHead.direction;
+		
+		snake.snakeBody.push(snakeTail);
+		canvasOps.changeCanvasStyle(canvasContext, "rgb(255, 255, 255)");
+		canvasOps.fillRect(canvasContext, snakeTail);
 	},
 	addFoodToBody : function () {
 		"use strict";
