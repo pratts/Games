@@ -1,60 +1,60 @@
-/*global $*/
+/*global $, canvasContext*/
 var canvasOps = {
-	clearCanvas : function (canvasContext, width, height) {
+	clearCanvas : function (width, height) {
 		"use strict";
         canvasContext.clearRect(0, 0, width, height);
     },
-	clearPoint : function (point, canvasContext) {
+	clearPoint : function (point) {
 		"use strict";
 		canvasContext.clearRect(point.xPosition, point.yPosition, point.width, point.height);
 	},
-	changeCanvasStyle : function (canvasContext, colorStr) {
+	changeCanvasStyle : function (colorStr) {
 		"use strict";
 		canvasContext.fillStyle = colorStr;
 	},
-	fillRect : function (canvasContext, point) {
+	fillRect : function (point) {
 		"use strict";
 		canvasContext.fillRect(point.xPosition, point.yPosition, point.width, point.height);
 	},
-	showOverMsg : function (canvasContext, width, height) {
+	showOverMsg : function (width, height) {
 		"use strict";
-		canvasOps.clearCanvas(canvasContext, width, height);
+		canvasOps.clearCanvas(width, height);
 		canvasOps.changeCanvasStyle("rgb(255, 255, 255)");
 		canvasContext.fillText("GAME OVER !", (width - 65) / 2, (height) / 2);
 	},
-	createAll : function (snakeBody, obstacles, food, canvasContext, width, height) {
+	createAll : function (snakeBody, obstacles, food, width, height) {
 		"use strict";
 		//clear everything
-		canvasOps.clearCanvas(canvasContext, width, height);
+		canvasOps.clearCanvas(width, height);
 		
 		// create food
-		canvasOps.createFoodPoint(food, canvasContext, width, height);
+		canvasOps.createFoodPoint(food, width, height);
 		
 		// create snake
-		canvasOps.createSnakeBody(snakeBody, canvasContext, width, height);
+		canvasOps.createSnakeBody(snakeBody, width, height);
 		
 		// create obstacles
-		canvasOps.createObstaclesArr(obstacles, canvasContext, width, height);
+		canvasOps.createObstaclesArr(obstacles, width, height);
 		
 	},
-	createSnakeBody : function (snakeBody, canvasContext, width, height) {
+	createSnakeBody : function (snakeBody, width, height) {
 		"use strict";
 		var i = 0;
-		canvasOps.changeCanvasStyle(canvasContext, "rgb(255, 255, 255)");
+		canvasOps.changeCanvasStyle("rgb(255, 255, 255)");
 		for (i = 0; i < snakeBody.length; i += 1) {
-			canvasOps.fillRect(canvasContext, snakeBody[i]);
+			canvasOps.fillRect(snakeBody[i]);
 		}
 	},
-	createFoodPoint : function (food, canvasContext, width, height) {
+	createFoodPoint : function (food, width, height) {
 		"use strict";
-		canvasOps.changeCanvasStyle(canvasContext, "rgb(255, 255, 0)");
-		canvasOps.fillRect(canvasContext, food);
+		canvasOps.changeCanvasStyle("rgb(255, 255, 0)");
+		canvasOps.fillRect(food);
 	},
-	createObstaclesArr : function (obstacles, canvasContext, width, height) {
+	createObstaclesArr : function (obstacles, width, height) {
 		"use strict";
 		var i = 0;
 		for (i = 0; i < obstacles.length; i += 1) {
-			canvasOps.fillRect(canvasContext, obstacles[i]);
+			canvasOps.fillRect(obstacles[i]);
 		}
 	},
 	updateScore : function (score) {

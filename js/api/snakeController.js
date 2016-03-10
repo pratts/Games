@@ -1,4 +1,4 @@
-/*global SnakeObj, game, canvasOps, canvasContext, width, height, snake, food, obstaclesArr,
+/*global SnakeObj, game, canvasOps, width, height, snake, food, obstaclesArr,
 $, initialize*/
 var validations = {
 	pointForSnakeOrFood : function (x, y, food, snakeBody, obstaclesArr) {
@@ -131,11 +131,11 @@ var gameLogic = {
 		"use strict";
 		if (game.state === -1) {
 			gameLogic.resetAll();
-			canvasOps.clearCanvas(canvasContext, width, height);
+			canvasOps.clearCanvas(width, height);
 			initialize.initializeSnake(controller.createSnake());
 			initialize.initializeFood(controller.createFood(width, height));
 			initialize.initializeObstacles(controller.createObstacles(width, height));
-			canvasOps.createAll(snake.snakeBody, obstaclesArr, food, canvasContext, width, height);
+			canvasOps.createAll(snake.snakeBody, obstaclesArr, food, width, height);
 		}
 		gameLogic.startSnake(snake, game);
 		game.timer = setInterval(gameLogic.snakeMovement, game.speed);
@@ -204,27 +204,27 @@ var gameLogic = {
 				canvasOps.updateScore(game.score);
 				gameLogic.updateGameSpeed();
 				
-				canvasOps.clearPoint(food, canvasContext);
+				canvasOps.clearPoint(food);
 				initialize.initializeFood(controller.createFood(width, height));
-				canvasOps.createFoodPoint(food, canvasContext, width, height);
+				canvasOps.createFoodPoint(food, width, height);
 			}
 		} else {
 			gameLogic.resetAll();
-			canvasOps.showOverMsg(canvasContext, width, height);
+			canvasOps.showOverMsg(width, height);
 		}
 	},
 	updateSnakeBody : function (snake) {
 		"use strict";
 		var snakeTail = snake.snakeBody.shift();
-		canvasOps.clearPoint(snakeTail, canvasContext);
+		canvasOps.clearPoint(snakeTail);
 		
 		snakeTail.xPosition = snake.snakeHead.xPosition;
 		snakeTail.yPosition = snake.snakeHead.yPosition;
 		snakeTail.direction = snake.snakeHead.direction;
 		
 		snake.snakeBody.push(snakeTail);
-		canvasOps.changeCanvasStyle(canvasContext, "rgb(255, 255, 255)");
-		canvasOps.fillRect(canvasContext, snakeTail);
+		canvasOps.changeCanvasStyle("rgb(255, 255, 255)");
+		canvasOps.fillRect(snakeTail);
 	},
 	addFoodToBody : function () {
 		"use strict";
