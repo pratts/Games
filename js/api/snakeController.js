@@ -247,18 +247,29 @@ var gameLogic = {
 	},
 	updateGameSpeed : function () {
 		"use strict";
+		var updateSpeed = false;
 		if (game.score > 5) {
 			game.speed = 8;
+			updateSpeed = true;
 		} else if (game.score > 15) {
 			game.speed = 6;
+			updateSpeed = true;
 		} else if (game.score > 25) {
 			game.speed = 4;
+			updateSpeed = true;
 		} else if (game.score > 35) {
 			game.speed = 2;
+			updateSpeed = true;
 		} else if (game.score > 45) {
 			game.speed = 1;
+			updateSpeed = true;
 		} else if (game.score > 50) {
 			game.speed = 0;
+			updateSpeed = true;
+		}
+		if (updateSpeed) {
+			clearInterval(game.timer);
+			game.timer = setInterval(gameLogic.snakeMovement, game.speed);
 		}
 	}
 };
