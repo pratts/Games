@@ -198,6 +198,7 @@ var gameLogic = {
 				snake.snakeHead.xPosition -= 1;
 			}
 			gameLogic.updateSnakeBody(snake);
+			gameLogic.moveObstacles(obstaclesArr);
 			if (validations.validateHeadAndFood(snake.snakeHead, food)) {
 				gameLogic.addFoodToBody();
 				game.score += 1;
@@ -271,6 +272,10 @@ var gameLogic = {
 			clearInterval(game.timer);
 			game.timer = setInterval(gameLogic.snakeMovement, game.speed);
 		}
+	},
+	moveObstacles : function (obstaclesArr) {
+		"use strict";
+		//move each obstacle across either x/y axis
 	}
 };
 
