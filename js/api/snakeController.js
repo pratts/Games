@@ -275,7 +275,7 @@ var gameLogic = {
 	},
 	moveObstacles : function (obstaclesArr) {
 		"use strict";
-		//move each obstacle across either x/y axis
+		//move each obstacle across either x/y axis,to be done
 	}
 };
 
