@@ -6,7 +6,6 @@
     "name": "Prateek Sharma",
     "email": "prateek.usict@gmail.com"
   },
-  "repository": "gruntjs/grunt-contrib-nodeunit",
   "scripts": {
     "test": "nodeunit js/test"
   },
